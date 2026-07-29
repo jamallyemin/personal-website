@@ -16,3 +16,8 @@ my personal site to show off my projects and stuff. built for hack club / starda
 ### live site
 
 https://jamallyemin.github.io/personal-website/
+
+
+## AI Declaration
+
+Used Gemini for debugging and fixing css structure. All HTML/CSS code was written manually.
