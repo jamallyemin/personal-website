@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emin — Web Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero__inner">
+      <div class="terminal">
+        <div class="terminal__bar">
+          <span class="dot dot--red"></span>
+          <span class="dot dot--signal"></span>
+          <span class="dot dot--accent"></span>
+          <span class="terminal__title">emin@dev:~</span>
+        </div>
+        <div class="terminal__body">
+          <p class="line"><span class="prompt">$</span> whoami</p>
+          <h1 class="line line--name">&gt; Emin</h1>
+
+          <p class="line"><span class="prompt">$</span> cat bio.txt</p>
+          <p class="line line--out">&gt; 16 years old. I like cybersecurity, chess, learning fun stuff</p>
+
+          <p class="line"><span class="prompt">$</span> contact --list</p>
+          <div class="line links">
+            <a class="btn-terminal" href="https://github.com/jamallyemin" target="_blank" rel="noopener noreferrer">
+              <span>&gt;</span> GitHub
+            </a>
+            <a class="btn-terminal" href="mailto:eminjamally8@gmail.com">
+              <span>&gt;</span> Email
+            </a>
+          </div>
+
+          <p class="line line--cursor"><span class="prompt">$</span> <span class="cursor"></span></p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- projects-->
+    <section class="section" id="projects">
+      <div class="container">
+        <p class="eyebrow">// projects</p>
+        <h2 class="section__title">Things I've built</h2>
+
+        <div class="project-grid">
+
+          <!--project 1-->
+          <article class="card">
+            <div class="card__media">
+              <span class="badge badge--live">In Development</span>
+              <div class="card__placeholder">
+                <span>IN DEVELOPMENT</span>
+              </div>
+            </div>
+            <div class="card__body">
+              <h3 class="card__title">The Variable Game</h3>
+              <p class="card__desc">
+                A real-time multiplayer coding puzzle featuring Easy to Hard difficulties, custom room hosting, streak tracking, and live Firebase leaderboards.
+              </p>
+              <ul class="tags">
+                <li class="tag">JavaScript</li>
+                <li class="tag">Firebase</li>
+                <li class="tag">Realtime DB</li>
+                <li class="tag">HTML/CSS</li>
+                <li class="tag">Python Syntax</li>
+              </ul>
+              <a class="card__link" href="#" target="_blank" rel="noopener noreferrer">View code →</a>
+            </div>
+          </article>
+
+          <!--project 2-->
+          <article class="card">
+            <div class="card__media">
+            <span class="badge badge--done">Live</span>
+            <img class="card__img" src="jester.png" alt="Jester AI Screenshot">
+            </div>
+            <div class="card__body">
+              <h3 class="card__title">Jester AI</h3>
+              <p class="card__desc">
+                A browser extension that flags phishing attempts and malicious sites in real-time by analyzing page structure and URL patterns.
+              </p>
+              <ul class="tags">
+                <li class="tag">HTML</li>
+                <li class="tag">CSS</li>
+                <li class="tag">JavaScript</li>
+              </ul>
+              <a class="card__link" href="https://github.com/jamallyemin/JesterAI" target="_blank" rel="noopener noreferrer">View code →</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+ 
+    <section class="section section--tools" id="tools">
+      <div class="container">
+        <p class="eyebrow">// tools</p>
+        <h2 class="section__title">What I work with</h2>
+
+        <ul class="pill-list">
+          <li class="pill">HTML/CSS</li>
+          <li class="pill">JavaScript</li>
+          <li class="pill">Firebase</li>
+          <li class="pill">Linux</li>
+          <li class="pill">Git/GitHub</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© 2026 Emin.</p>
+    </div>
+  </footer>
+</body>
+</html>
