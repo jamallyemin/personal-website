@@ -1,23 +1,19 @@
 # personal portfolio
 
-my personal site to show off my projects and stuff. built for hack club / stardance and for future use
+my personal site to show off my projects and stuff.
 
 ### whats inside
 
 * **terminal header:** basic info about me and direct links
-* **projects:** cards for stuff im building like *the variable game* and *jester ai*
+* **projects:** cards for stuff im building like glyph, debugr.fun, caspianhc, and jester ai
 * **stack:** tags for whatever tools and languages i used
 
 ### tech
 
-* **html:** layout and text structure
-* **css:** custom grid and terminal theme
+* **html:** layout, text structure and modal templates
+* **css:** custom grid, terminal theme and responsive design
+* **javascript:** dynamic panel routing and discord lanyard integration
 
 ### live site
 
 https://jamallyemin.github.io/personal-website/
-
-
-## AI Declaration
-
-Used Gemini for debugging and fixing css structure. All HTML/CSS code was written manually.
