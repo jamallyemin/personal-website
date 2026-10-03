@@ -195,6 +195,10 @@
   .k { font: 600 13px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #fff; flex-shrink: 0; }
   .v { font: 400 14px var(--mono); color: var(--dim); text-align: right; word-break: break-word; }
 
+  .cert-row summary::-webkit-details-marker { display: none; }
+  .cert-row[open] .cert-icon::before { content: "[-]"; }
+  .cert-icon::before { content: "[+]"; }
+  .cert-item:hover { border-color: var(--accent) !important; }
   .panel a { color: var(--dim); text-decoration: none; transition: color .2s; }
   .panel a:hover { color: var(--accent); }
 
@@ -260,6 +264,40 @@
   <div class="row"><span class="k">Name</span><span class="v">Emin Jamally</span></div>
   <div class="row"><span class="k">Location</span><span class="v">Baku, Azerbaijan</span></div>
   <div class="row"><span class="k">Interests</span><span class="v">Cybersecurity · Custom PCBs · Chess</span></div>
+  
+  <details class="cert-row" style="cursor: pointer; user-select: none; border-bottom: 1px solid #222; display: flex; flex-direction: column; padding: 14px 0; margin: 0;">
+    <summary style="display: flex; justify-content: space-between; align-items: center; width: 100%; outline: none; list-style: none;">
+      <span class="k" style="font: 600 12px var(--mono); color: #fff; letter-spacing: 1px;">Certificates</span>
+      <span class="v cert-icon" style="font: 600 12px var(--mono); color: var(--accent);"></span>
+    </summary>
+    <div style="width: 100%; margin-top: 14px; padding-top: 14px; border-top: 1px solid #222; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; cursor: default;">
+      
+      <a href="holbertoncertif.jpg" target="_blank" rel="noopener noreferrer" style="display: block; border: 1px solid #222; padding: 8px; background: #000; text-decoration: none; transition: border-color .2s;" class="cert-item">
+        <img src="holbertoncertif.jpg" alt="Holberton GenAI" style="width: 100%; height: 120px; object-fit: contain; background: #0a0a0a; display: block; border-bottom: 1px solid #222; margin-bottom: 8px;">
+        <span style="font: 600 12px var(--mono); color: #fff; display: block;">Holberton School</span>
+        <span style="font: 400 11px var(--mono); color: var(--dim);">GenAI Scholarship</span>
+      </a>
+
+      <a href="courserapy4e.jpeg" target="_blank" rel="noopener noreferrer" style="display: block; border: 1px solid #222; padding: 8px; background: #000; text-decoration: none; transition: border-color .2s;" class="cert-item">
+        <img src="courserapy4e.jpeg" alt="Python for Everybody" style="width: 100%; height: 120px; object-fit: contain; background: #0a0a0a; display: block; border-bottom: 1px solid #222; margin-bottom: 8px;">
+        <span style="font: 600 12px var(--mono); color: #fff; display: block;">University of Michigan</span>
+        <span style="font: 400 11px var(--mono); color: var(--dim);">Python for Everybody</span>
+      </a>
+
+      <a href="CERTIFICATE_LANDING_PAGE~QVCVYDFOZVH2.jpeg" target="_blank" rel="noopener noreferrer" style="display: block; border: 1px solid #222; padding: 8px; background: #000; text-decoration: none; transition: border-color .2s;" class="cert-item">
+        <img src="CERTIFICATE_LANDING_PAGE~QVCVYDFOZVH2.jpeg" alt="Python Data Structures" style="width: 100%; height: 120px; object-fit: contain; background: #0a0a0a; display: block; border-bottom: 1px solid #222; margin-bottom: 8px;">
+        <span style="font: 600 12px var(--mono); color: #fff; display: block;">University of Michigan</span>
+        <span style="font: 400 11px var(--mono); color: var(--dim);">Python Data Structures</span>
+      </a>
+
+      <a href="pyf4certif.jpeg" target="_blank" rel="noopener noreferrer" style="display: block; border: 1px solid #222; padding: 8px; background: #000; text-decoration: none; transition: border-color .2s;" class="cert-item">
+        <img src="pyf4certif.jpeg" alt="Access Web Data" style="width: 100%; height: 120px; object-fit: contain; background: #0a0a0a; display: block; border-bottom: 1px solid #222; margin-bottom: 8px;">
+        <span style="font: 600 12px var(--mono); color: #fff; display: block;">University of Michigan</span>
+        <span style="font: 400 11px var(--mono); color: var(--dim);">Access Web Data</span>
+      </a>
+
+    </div>
+  </details>
 </template>
 
 <template id="tpl-projects">
