@@ -1,125 +1,494 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emin — Web Developer</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jamallyemin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #39ff88;
+    --dim: #8d8d8d;
+    --sans: "Inter", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --cx: 50%;
+    --cy: 50%;
+  }
+  * { 
+    box-sizing: border-box; 
+    font-family: var(--sans);
+    color: #fff;
+  }
+  html, body { margin: 0; }
+
+  body {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #000;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  #main-content {
+    width: min(1200px, calc(100% - 48px));
+    margin: 0 auto;
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-start;
+    transition: filter 0.3s var(--ease);
+  }
+
+  body.modal-open #main-content {
+    filter: blur(8px);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -100%;
+    background-size: 10px 10px;
+    background-image: repeating-linear-gradient(45deg, #222 0, #222 1px, #000 1px, #000 50%);
+    opacity: 0.4;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+      150px circle at var(--cx) var(--cy),
+      rgba(57, 255, 136, 0.06),
+      transparent 80%
+    );
+    z-index: -1;
+    pointer-events: none;
+    transition: background 0.1s ease-out;
+  }
+
+  .kicker { margin: 0 0 8px; font: 400 16px var(--mono); color: var(--dim); }
+  .kicker b { color: var(--accent); font-weight: 600; }
+  
+  h1 {
+    margin: 0 0 28px;
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  .cursor { color: var(--accent); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .buttons { display: flex; flex-wrap: wrap; gap: 20px; }
+  .buttons button {
+    font: 200 20px var(--sans);
+    color: #fff;
+    background: #000;
+    border: 1px solid #fff;
+    padding: 11px 24px;
+    cursor: pointer;
+    transition: border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .buttons button:hover,
+  .buttons button:focus-visible { 
+    border-color: var(--accent); 
+    color: var(--accent); 
+    background: rgba(57, 255, 136, .04); 
+    outline: none; 
+  }
+
+  footer { 
+    position: fixed; 
+    right: 2rem; 
+    bottom: 1rem; 
+    font: 400 14px var(--mono); 
+    color: #666; 
+  }
+
+  .overlay { 
+    position: fixed; 
+    inset: 0; 
+    z-index: 50; 
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 40px;
+    visibility: hidden; 
+    pointer-events: none; 
+  }
+  .overlay.open { visibility: visible; pointer-events: auto; }
+
+  .backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .overlay.open .backdrop { opacity: 1; }
+
+  .panel {
+    position: relative;
+    z-index: 10;
+    width: min(620px, calc(100vw - 80px));
+    height: 680px;
+    max-height: calc(100vh - 80px);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
+  }
+
+  .overlay.open .panel {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+    padding: 24px 30px;
+    border-bottom: 1px solid #fff;
+  }
+  .panel-title {
+    margin: 0; line-height: 1;
+    font-size: 1.35rem; font-weight: 700;
+    letter-spacing: .15em; text-transform: uppercase;
+  }
+  .panel-close {
+    display: grid; place-items: center;
+    width: 28px; height: 28px; padding: 0;
+    font: 400 20px var(--sans); color: #fff;
+    background: transparent; border: none;
+    cursor: pointer; transition: color .2s;
+  }
+  .panel-close:hover, .panel-close:focus-visible { 
+    color: var(--accent); 
+    outline: none; 
+  }
+
+  .panel-body {
+    flex: 1; overflow-y: auto; padding: 16px 30px 30px;
+    scrollbar-width: thin; scrollbar-color: #333 #000;
+  }
+
+  .cmd { margin: 16px 0; font: 400 14px var(--mono); color: var(--dim); }
+  .cmd b { color: var(--accent); font-weight: 600; }
+
+  .row {
+    display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start;
+    gap: 16px;
+    padding: 18px 0; border-bottom: 1px solid #222;
+    line-height: 1.5;
+  }
+  .k { font: 600 13px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #fff; flex-shrink: 0; }
+  .v { font: 400 14px var(--mono); color: var(--dim); text-align: right; word-break: break-word; }
+
+  .panel a { color: var(--dim); text-decoration: none; transition: color .2s; }
+  .panel a:hover { color: var(--accent); }
+
+  .proj { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    margin-top: 16px; 
+    padding: 20px; 
+    border: 1px solid #222; 
+    transition: border-color .2s ease;
+  }
+  .proj:hover { border-color: #444; }
+  .proj h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between; }
+  .proj p { margin: 0; font-size: .95rem; line-height: 1.55; color: #888; }
+  
+  .tag { font: 600 10px var(--mono); text-transform: uppercase; padding: 3px 8px; border: 1px solid; }
+  .tag.live { color: #39ff88; border-color: #39ff88; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .chips li { font: 400 11px var(--mono); padding: 3px 8px; border: 1px solid #222; color: #777; }
+  .proj .go { align-self: flex-start; font: 400 13px var(--mono); }
+
+  @media (max-width: 600px) {
+    .overlay { padding: 16px; }
+    .panel { width: 100%; height: 85vh; max-height: none; }
+    #main-content { width: calc(100% - 32px); }
+    h1 { font-size: clamp(40px, 14vw, 64px); }
+    .buttons { width: 100%; gap: 10px; }
+    .buttons button { flex: 1 1 calc(50% - 10px); padding: 12px 16px; font-size: 16px; text-align: center; }
+  }
+</style>
 </head>
 <body>
-  <header class="hero">
-    <div class="container hero__inner">
-      <div class="terminal">
-        <div class="terminal__bar">
-          <span class="dot dot--red"></span>
-          <span class="dot dot--signal"></span>
-          <span class="dot dot--accent"></span>
-          <span class="terminal__title">emin@dev:~</span>
-        </div>
-        <div class="terminal__body">
-          <p class="line"><span class="prompt">$</span> whoami</p>
-          <h1 class="line line--name">&gt; Emin</h1>
 
-          <p class="line"><span class="prompt">$</span> cat bio.txt</p>
-          <p class="line line--out">&gt; 16 years old. I like cybersecurity, chess, learning fun stuff</p>
+<main id="main-content">
+  <p class="kicker"><b>$</b> whoami</p>
+  <h1>jamallyemin<span class="cursor" aria-hidden="true">_</span></h1>
+  <div class="buttons">
+    <button type="button" data-open="about">About</button>
+    <button type="button" data-open="projects">Projects</button>
+    <button type="button" data-open="tools">Tools</button>
+    <button type="button" data-open="contact">Contact</button>
+  </div>
+</main>
 
-          <p class="line"><span class="prompt">$</span> contact --list</p>
-          <div class="line links">
-            <a class="btn-terminal" href="https://github.com/jamallyemin" target="_blank" rel="noopener noreferrer">
-              <span>&gt;</span> GitHub
-            </a>
-            <a class="btn-terminal" href="mailto:eminjamally8@gmail.com">
-              <span>&gt;</span> Email
-            </a>
-          </div>
+<footer>© 2026 <a href="https://github.com/jamallyemin" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">jamallyemin</a></footer>
 
-          <p class="line line--cursor"><span class="prompt">$</span> <span class="cursor"></span></p>
-        </div>
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="backdrop" id="backdrop"></div>
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+    <div class="panel-head">
+      <h2 class="panel-title" id="panel-title"></h2>
+      <button type="button" class="panel-close" id="panel-close" aria-label="Close">✕</button>
+    </div>
+    <div class="panel-body" id="panel-body"></div>
+  </div>
+</div>
+
+<template id="tpl-about">
+  <p class="cmd"><b>$</b> cat bio.txt</p>
+  <span style="display: block; font: 400 14px var(--mono); color: var(--dim); line-height: 1.6; margin-bottom: 20px;"><span style="color: var(--accent);">></span> Hello, I'm a 16 year old developer from Azerbaijan, I study 11th grade in high school and am passionate about cybersecurity and embedded systems. I'm also leading a club called <a href="https://jamallyemin.github.io/CaspianHC/" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: underline;">Caspian Hack Club</a> funded & supported by <a href="https://hackclub.com" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: underline;">Hack Club</a></span>
+  <div class="row"><span class="k">Name</span><span class="v">Emin Jamally</span></div>
+  <div class="row"><span class="k">Location</span><span class="v">Baku, Azerbaijan</span></div>
+  <div class="row"><span class="k">Interests</span><span class="v">Cybersecurity · Custom PCBs · Chess</span></div>
+</template>
+
+<template id="tpl-projects">
+  <p class="cmd"><b>$</b> ls projects/</p>
+  <div class="proj">
+    <h3>Glyph <span class="tag live">Active</span></h3>
+    <p>A 3x3 pattern-deduction browser puzzle game. Find the hidden rule and fill the missing cell across shape, color, and count.</p>
+    <ul class="chips"><li>JavaScript</li><li>CSS</li><li>HTML</li></ul>
+    <a class="go" href="https://github.com/jamallyemin/Glyph" target="_blank" rel="noopener noreferrer">github.com →</a>
+  </div>
+  <div class="proj">
+    <h3>Debugr.fun <span class="tag live">Active</span></h3>
+    <p>A browser puzzle where you write Python-like variable assignments to satisfy randomly generated rules before a timer starts deleting your code — play solo or race friends live in multiplayer rooms.</p>
+    <ul class="chips"><li>JavaScript</li><li>CSS</li><li>HTML</li></ul>
+    <a class="go" href="https://debugr.fun" target="_blank" rel="noopener noreferrer">debugr.fun →</a>
+  </div>
+  <div class="proj">
+    <h3>CaspianHC <span class="tag live">Active</span></h3>
+    <p>Website for Caspian Hack Club, built to display hardware projects, custom PCBs, microcontrollers, and the crew.</p>
+    <ul class="chips"><li>HTML</li><li>CSS</li></ul>
+    <a class="go" href="https://jamallyemin.github.io/CaspianHC/" target="_blank" rel="noopener noreferrer">github.io/CaspianHC →</a>
+  </div>
+  <div class="proj">
+    <h3>Jester AI <span class="tag live">Active</span></h3>
+    <p>Browser extension flagging phishing attempts and malicious domains in real time.</p>
+    <ul class="chips"><li>JavaScript</li><li>HTML</li><li>CSS</li></ul>
+    <a class="go" href="https://github.com/jamallyemin/JesterAI" target="_blank" rel="noopener noreferrer">github.com →</a>
+  </div>
+</template>
+
+<template id="tpl-tools">
+  <p class="cmd"><b>$</b> which --all</p>
+  <div class="row"><span class="k">OS</span><span class="v">Arch Linux · Hyprland</span></div>
+  <div class="row"><span class="k">Software</span><span class="v">VS Code · Firefox · KiCad · Dolphin · Git</span></div>
+  <div class="row"><span class="k">Hardware</span><span class="v">ESP32 · Arduino · Seeed Studio XIAO</span></div>
+  <div class="row"><span class="k">Languages</span><span class="v">Python · JavaScript · HTML/CSS</span></div>
+</template>
+
+<template id="tpl-contact">
+  <p class="cmd"><b>$</b> contact --list</p>
+  <div class="row"><span class="k">GitHub</span><span class="v"><a href="https://github.com/jamallyemin" target="_blank" rel="noopener noreferrer">github.com/jamallyemin</a></span></div>
+  <div class="row"><span class="k">Email</span><span class="v"><a href="mailto:eminjamally8@gmail.com">eminjamally8@gmail.com</a></span></div>
+  <div class="row"><span class="k">Instagram</span><span class="v"><a href="https://instagram.com/jamallyemin" target="_blank" rel="noopener noreferrer">@jamallyemin</a></span></div>
+
+  <a id="discord-card" href="https://discord.com/users/1448449119252254872" target="_blank" rel="noopener noreferrer" style="margin-top: 24px; background: #000; border: 1px solid #222; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-family: var(--mono); text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="position: relative; width: 48px; height: 48px; flex-shrink: 0;">
+        <img id="dc-avatar" src="" alt="Avatar" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #111;">
+        <div id="dc-status-dot" style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #000; background: #747f8d;"></div>
+      </div>
+      <div style="display: flex; flex-direction: column; overflow: hidden;">
+        <span id="dc-username" style="font-weight: 600; font-size: 15px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Loading...</span>
+        <span id="dc-subtext" style="font-size: 12px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Connecting...</span>
       </div>
     </div>
-  </header>
+    <div id="dc-activity" style="font-size: 12px; color: #aaa; background: rgba(255,255,255,0.02); border: 1px solid #1a1a1a; padding: 10px; border-radius: 6px; display: none;"></div>
+  </a>
 
-  <main>
-    <!-- projects-->
-    <section class="section" id="projects">
-      <div class="container">
-        <p class="eyebrow">// projects</p>
-        <h2 class="section__title">Things I've built</h2>
+  <style>
+    #discord-card:hover {
+      border-color: var(--accent);
+      background: rgba(57, 255, 136, 0.02);
+    }
+  </style>
 
-        <div class="project-grid">
+  <script>
+    (function() {
+      const userId = "1448449119252254872";
+      
+      function formatTime(ms) {
+        const totalSecs = Math.floor(ms / 1000);
+        const mins = Math.floor(totalSecs / 60);
+        const secs = totalSecs % 60;
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
 
-          <!--project 1-->
-          <article class="card">
-            <div class="card__media">
-              <span class="badge badge--live">In Development</span>
-              <div class="card__placeholder">
-                <span>IN DEVELOPMENT</span>
-              </div>
-            </div>
-            <div class="card__body">
-              <h3 class="card__title">The Variable Game</h3>
-              <p class="card__desc">
-                A real-time multiplayer coding puzzle featuring Easy to Hard difficulties, custom room hosting, streak tracking, and live Firebase leaderboards.
-              </p>
-              <ul class="tags">
-                <li class="tag">JavaScript</li>
-                <li class="tag">Firebase</li>
-                <li class="tag">Realtime DB</li>
-                <li class="tag">HTML/CSS</li>
-                <li class="tag">Python Syntax</li>
-              </ul>
-              <a class="card__link" href="#" target="_blank" rel="noopener noreferrer">View code →</a>
-            </div>
-          </article>
+      function updateCard() {
+        fetch(`https://api.lanyard.rest/v1/users/${userId}`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.success) return;
+            const d = data.data;
+            const user = d.discord_user;
+            
+            const avatarUrl = user.avatar 
+              ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
+              : `https://cdn.discordapp.com/embed/avatars/0.png`;
+            document.getElementById('dc-avatar').src = avatarUrl;
+            
+            document.getElementById('dc-username').textContent = user.global_name || user.username;
+            document.getElementById('dc-subtext').textContent = `@${user.username}`;
+            
+            const colors = { online: '#3ba55d', idle: '#faa61a', dnd: '#ed4245', offline: '#747f8d' };
+            document.getElementById('dc-status-dot').style.background = colors[d.discord_status] || '#747f8d';
 
-          <!--project 2-->
-          <article class="card">
-            <div class="card__media">
-            <span class="badge badge--done">Live</span>
-            <img class="card__img" src="jester.png" alt="Jester AI Screenshot">
-            </div>
-            <div class="card__body">
-              <h3 class="card__title">Jester AI</h3>
-              <p class="card__desc">
-                A browser extension that flags phishing attempts and malicious sites in real-time by analyzing page structure and URL patterns.
-              </p>
-              <ul class="tags">
-                <li class="tag">HTML</li>
-                <li class="tag">CSS</li>
-                <li class="tag">JavaScript</li>
-              </ul>
-              <a class="card__link" href="https://github.com/jamallyemin/JesterAI" target="_blank" rel="noopener noreferrer">View code →</a>
-            </div>
-          </article>
+            const actBox = document.getElementById('dc-activity');
 
-        </div>
-      </div>
-    </section>
+            if (d.spotify && d.listening_to_spotify) {
+              const s = d.spotify;
+              const now = Date.now();
+              const start = s.timestamps.start;
+              const end = s.timestamps.end;
+              const current = Math.min(now - start, end - start);
+              const duration = end - start;
+              const progressPercent = Math.min(Math.max((current / duration) * 100, 0), 100);
 
- 
-    <section class="section section--tools" id="tools">
-      <div class="container">
-        <p class="eyebrow">// tools</p>
-        <h2 class="section__title">What I work with</h2>
+              actBox.innerHTML = `
+                <div style="font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;">Listening to Spotify</div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <img src="${s.album_art_url}" style="width: 44px; height: 44px; border-radius: 4px; object-fit: cover; flex-shrink: 0;" />
+                  <div style="display: flex; flex-direction: column; overflow: hidden; width: 100%;">
+                    <span style="font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px;">${s.song}</span>
+                    <span style="color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; margin-top: 2px;">${s.artist}</span>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 11px; color: var(--dim);">
+                      <span>${formatTime(current)}</span>
+                      <div style="flex: 1; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: ${progressPercent}%; height: 100%; background: #fff; border-radius: 2px;"></div>
+                      </div>
+                      <span>${formatTime(duration)}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+              actBox.style.display = 'block';
+            } else if (d.activities && d.activities.length > 0) {
+              const customAct = d.activities.find(a => a.type === 4);
+              const playingAct = d.activities.find(a => a.type === 0);
+              
+              let text = "";
+              if (customAct && customAct.state) {
+                text = `${customAct.emoji ? (customAct.emoji.id ? `<img src="https://cdn.discordapp.com/emojis/${customAct.emoji.id}.${customAct.emoji.animated ? 'gif' : 'png'}" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;">` : customAct.emoji.name + ' ') : ''}${customAct.state}`;
+              } else if (playingAct) {
+                text = `Playing <b>${playingAct.name}</b>`;
+              }
 
-        <ul class="pill-list">
-          <li class="pill">HTML/CSS</li>
-          <li class="pill">JavaScript</li>
-          <li class="pill">Firebase</li>
-          <li class="pill">Linux</li>
-          <li class="pill">Git/GitHub</li>
-        </ul>
-      </div>
-    </section>
-  </main>
+              if (text) {
+                actBox.innerHTML = text;
+                actBox.style.display = 'block';
+              } else {
+                actBox.style.display = 'none';
+              }
+            } else {
+              actBox.style.display = 'none';
+            }
+          }).catch(err => console.error(err));
+      }
 
-  <footer class="footer">
-    <div class="container footer__inner">
-      <p>© 2026 Emin.</p>
-    </div>
-  </footer>
+      updateCard();
+      setInterval(updateCard, 3000);
+    })();
+  </script>
+</template>
+
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+document.addEventListener('keydown', e => {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+    (e.ctrlKey && e.key === 'U')
+  ) {
+    e.preventDefault();
+  }
+});
+
+(() => {
+  window.addEventListener('pointermove', (e) => {
+    document.documentElement.style.setProperty('--cx', `${e.clientX}px`);
+    document.documentElement.style.setProperty('--cy', `${e.clientY}px`);
+  });
+
+  const overlay = document.getElementById('overlay');
+  const backdrop = document.getElementById('backdrop');
+  const panel = document.getElementById('panel');
+  const titleEl = document.getElementById('panel-title');
+  const bodyEl = document.getElementById('panel-body');
+  const closeBtn = document.getElementById('panel-close');
+
+  let trigger = null;
+
+  function openPanel(name, btn) {
+    trigger = btn;
+    titleEl.textContent = name;
+    
+    const tpl = document.getElementById('tpl-' + name);
+    const clone = tpl.content.cloneNode(true);
+    
+    bodyEl.replaceChildren(clone);
+    bodyEl.scrollTop = 0;
+
+    bodyEl.querySelectorAll('script').forEach(oldScript => {
+      const newScript = document.createElement('script');
+      Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+      newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+
+    overlay.classList.add('open');
+    document.body.classList.add('modal-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    closeBtn.focus({ preventScroll: true });
+  }
+
+  function closePanel() {
+    if (!overlay.classList.contains('open')) return;
+    
+    overlay.classList.remove('open');
+    document.body.classList.remove('modal-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    
+    if (trigger) {
+      trigger.focus({ preventScroll: true });
+      trigger = null;
+    }
+  }
+
+  const buttons = document.querySelectorAll('[data-open]');
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => openPanel(b.dataset.open, b)));
+
+  backdrop.addEventListener('click', closePanel);
+  closeBtn.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') closePanel();
+  });
+})();
+</script>
 </body>
 </html>
